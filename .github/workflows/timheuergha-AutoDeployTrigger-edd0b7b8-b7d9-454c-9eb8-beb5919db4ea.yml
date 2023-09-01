@@ -29,14 +29,13 @@ jobs:
       - name: Build and push container image to registry
         uses: azure/container-apps-deploy-action@v1
         with:
-          appSourcePath: ${{ github.workspace }}/dockerfile 
+          appSourcePath: ${{ github.workspace }}/ApiApplication2 
           registryUrl: registry20230816011336.azurecr.io
           registryUsername: ${{ secrets.TIMHEUERGHA_REGISTRY_USERNAME }}
           registryPassword: ${{ secrets.TIMHEUERGHA_REGISTRY_PASSWORD }}
           containerAppName: timheuergha
           resourceGroup: timheuer
           imageToBuild: registry20230816011336.azurecr.io/timheuergha:${{ github.sha }}
-          dockerfilePath: Dockerfile
 
      
 

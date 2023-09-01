@@ -1,0 +1,42 @@
+name: Trigger auto deployment for timheuergha
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ main ]
+    paths:
+    - 'dockerfile/**'
+    - '.github/workflows/timheuergha-AutoDeployTrigger-edd0b7b8-b7d9-454c-9eb8-beb5919db4ea.yml'
+
+  # Allow mannually trigger 
+  workflow_dispatch:
+      
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.TIMHEUERGHA_AZURE_CREDENTIALS }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          appSourcePath: ${{ github.workspace }}/dockerfile 
+          registryUrl: registry20230816011336.azurecr.io
+          registryUsername: ${{ secrets.TIMHEUERGHA_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.TIMHEUERGHA_REGISTRY_PASSWORD }}
+          containerAppName: timheuergha
+          resourceGroup: timheuer
+          imageToBuild: registry20230816011336.azurecr.io/timheuergha:${{ github.sha }}
+          dockerfilePath: Dockerfile
+
+     
+
